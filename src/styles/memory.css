@@ -1,0 +1,211 @@
+/* ---------------------------------------------------------------------------
+   Memory management lab
+   A scaled horizontal memory bar plus the workload editor that scribes the
+   operation script driving it.
+   --------------------------------------------------------------------------- */
+
+.memory-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.memory-map__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.memory-map__title {
+  font-size: var(--text-base);
+}
+
+.memory-map__flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.memory-map__bar {
+  display: flex;
+  width: 100%;
+  min-height: 5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elevated);
+}
+
+.memory-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: var(--space-2) 2px;
+  border-right: 1px solid color-mix(in srgb, var(--bg) 60%, transparent);
+  overflow: hidden;
+  text-align: center;
+  transition: filter var(--transition-fast);
+}
+
+.memory-block:last-child {
+  border-right: none;
+}
+
+.memory-block--free {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--text-faint) 18%, transparent) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.memory-block--allocated {
+  color: #fff;
+}
+
+.memory-block.is-highlighted {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: -3px;
+  filter: brightness(1.08);
+}
+
+.memory-block__label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memory-block__size {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.memory-block__waste {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, #000 32%, transparent) 0 5px,
+    transparent 5px 10px
+  );
+  border-left: 1px dashed color-mix(in srgb, #fff 70%, transparent);
+  pointer-events: none;
+}
+
+.memory-map__addresses {
+  display: flex;
+  width: 100%;
+}
+
+.memory-map__address {
+  box-sizing: border-box;
+  min-width: 0;
+  padding-left: 2px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.memory-map__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Editor ------------------------------------------------------------------- */
+
+.memory-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.memory-editor__presets,
+.memory-editor__policies,
+.memory-editor__partitions,
+.memory-editor__create,
+.memory-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+
+.memory-editor__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.memory-editor__label {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.memory-editor__hint {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+.memory-editor__partitions .data-table__input {
+  width: 5rem;
+}
+
+.memory-editor__create .field__control,
+.memory-editor__create .data-table__input {
+  width: 6rem;
+}
+
+.memory-editor__resident {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memory-editor__resident li {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background-color: var(--bg-elevated);
+}
+
+@media (max-width: 640px) {
+  .memory-map__bar {
+    min-height: 4rem;
+  }
+
+  .memory-block__size {
+    display: none;
+  }
+}

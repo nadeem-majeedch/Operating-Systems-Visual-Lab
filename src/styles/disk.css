@@ -1,0 +1,460 @@
+/* ---------------------------------------------------------------------------
+   Disk scheduling: a cylinder axis, the seek path, and the request queue.
+   --------------------------------------------------------------------------- */
+
+.disk-visual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.disk-track,
+.disk-queue,
+.seek-chart,
+.disk-compare {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.disk-track__header,
+.disk-queue__header,
+.seek-chart__header,
+.disk-compare__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.disk-track__title,
+.disk-queue__title,
+.seek-chart__title,
+.disk-compare__title {
+  font-size: var(--text-sm);
+}
+
+.disk-track__meta,
+.disk-queue__meta,
+.seek-chart__meta,
+.disk-compare__meta {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+/* Track -------------------------------------------------------------------- */
+
+.disk-track__plot {
+  position: relative;
+  height: 7rem;
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.disk-track__axis {
+  position: absolute;
+  top: 55%;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--border-strong), var(--border-strong));
+}
+
+.disk-track__end {
+  position: absolute;
+  top: calc(55% + 0.6rem);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+}
+
+.disk-track__end--left {
+  left: 0;
+}
+
+.disk-track__end--right {
+  right: 0;
+}
+
+.disk-marker {
+  position: absolute;
+  top: calc(55% - 1.1rem);
+  width: 2px;
+  height: 1.1rem;
+  transform: translateX(-50%);
+  background-color: var(--border-strong);
+  transition: background-color var(--transition-fast);
+}
+
+.disk-marker.is-pending {
+  background-color: var(--accent-strong);
+}
+
+.disk-marker.is-served {
+  background-color: color-mix(in srgb, var(--text-faint) 45%, transparent);
+}
+
+.disk-marker__label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.disk-track__movement {
+  position: absolute;
+  top: calc(55% - 2px);
+  height: 4px;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  opacity: 0.7;
+  transition:
+    left var(--transition-medium),
+    width var(--transition-medium);
+}
+
+.disk-track__movement.is-jump {
+  background-image: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--warning) 70%, transparent) 0 6px,
+    transparent 6px 12px
+  );
+  background-color: transparent;
+}
+
+.disk-head {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: left 600ms ease;
+}
+
+.disk-head__stem {
+  width: 2px;
+  height: 2.8rem;
+  background-color: var(--accent-strong);
+}
+
+.disk-head.is-service .disk-head__stem {
+  background-color: var(--success);
+}
+
+.disk-head__value {
+  padding: 0 0.35rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--accent-strong);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.disk-head.is-service .disk-head__value {
+  background-color: var(--success);
+}
+
+.disk-track__legend,
+.seek-chart__legend,
+.disk-queue__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+.disk-track__legend span,
+.seek-chart__legend span {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.disk-legend__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--accent-strong);
+}
+
+.disk-legend__dot.is-served {
+  background-color: color-mix(in srgb, var(--text-faint) 45%, transparent);
+}
+
+/* Queue chips -------------------------------------------------------------- */
+
+.disk-queue__empty {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-style: italic;
+}
+
+.disk-queue__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.queue-chip {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-elevated);
+  font-variant-numeric: tabular-nums;
+}
+
+.queue-chip.is-pending {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+.queue-chip.is-served {
+  color: var(--text-faint);
+  opacity: 0.6;
+}
+
+.queue-chip.is-current {
+  border-color: var(--success);
+  background-color: color-mix(in srgb, var(--success) 16%, transparent);
+  opacity: 1;
+}
+
+.queue-chip__value {
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.queue-chip__mark {
+  font-size: 0.625rem;
+}
+
+.queue-chip.is-pending .queue-chip__mark {
+  color: var(--accent-strong);
+}
+
+.queue-chip.is-served .queue-chip__mark {
+  color: var(--success);
+}
+
+/* Seek chart --------------------------------------------------------------- */
+
+.seek-chart__scroll {
+  overflow-x: auto;
+}
+
+.seek-chart__svg {
+  display: block;
+}
+
+.seek-chart__grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.seek-chart__axis-label {
+  fill: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+}
+
+.seek-chart__segment {
+  stroke-width: 2;
+}
+
+.seek-chart__segment.is-service {
+  stroke: var(--accent-strong);
+}
+
+.seek-chart__segment.is-jump {
+  stroke: var(--warning);
+  stroke-dasharray: 5 4;
+}
+
+.seek-chart__point {
+  fill: var(--accent-strong);
+}
+
+.seek-chart__point.is-init {
+  fill: var(--text-faint);
+}
+
+.seek-chart__point.is-jump {
+  fill: var(--warning);
+}
+
+.seek-chart__point.is-current {
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+.seek-chart__point-label {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+}
+
+.seek-legend__line {
+  display: inline-block;
+  width: 1.25rem;
+  height: 2px;
+  background-color: var(--accent-strong);
+}
+
+.seek-legend__line.is-jump {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--warning) 0 4px,
+    transparent 4px 8px
+  );
+  background-color: transparent;
+}
+
+/* Editor ------------------------------------------------------------------- */
+
+.disk-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.disk-editor__presets,
+.disk-editor__policies,
+.disk-editor__direction,
+.disk-editor__actions,
+.disk-editor__generate {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+
+.disk-editor__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.disk-editor__label {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.disk-editor__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-2);
+  align-items: end;
+}
+
+.disk-editor__hint {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+.disk-editor__requests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.disk-editor__requests li {
+  display: flex;
+  gap: var(--space-1);
+  align-items: flex-end;
+}
+
+.disk-editor__requests .data-table__input {
+  width: 4.5rem;
+}
+
+/* Comparison --------------------------------------------------------------- */
+
+.disk-compare__empty {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-style: italic;
+}
+
+.data-table tr.is-best th,
+.data-table tr.is-best td {
+  background-color: color-mix(in srgb, var(--success) 10%, transparent);
+}
+
+.disk-compare__movement {
+  min-width: 9rem;
+}
+
+.disk-compare__bar {
+  display: block;
+  height: 5px;
+  margin-bottom: 3px;
+  border-radius: 999px;
+  background-color: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.disk-compare__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--accent-strong);
+}
+
+.disk-compare__number {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.disk-compare__flag {
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--success) 22%, transparent);
+  color: var(--success);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.data-table td.is-best-cell {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.disk-compare__order {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+.disk-compare__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}

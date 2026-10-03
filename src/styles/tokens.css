@@ -1,0 +1,117 @@
+/* ---------------------------------------------------------------------------
+   Design tokens
+   Every colour used by the app resolves through these variables, which is what
+   makes the light/dark switch a single attribute flip on <html>.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --text-2xs: 0.7rem;
+  --text-xs: 0.78rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.3rem;
+  --text-2xl: 1.65rem;
+  --text-3xl: clamp(1.9rem, 1.4rem + 1.6vw, 2.35rem);
+  --text-4xl: clamp(2.2rem, 1.5rem + 2.6vw, 3.25rem);
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.4;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.7;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.75rem;
+  --space-8: 3.5rem;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 20%);
+  --shadow-md: 0 10px 30px rgb(0 0 0 / 22%);
+
+  --layout-sidebar: 18.5rem;
+  --layout-rail: 4.75rem;
+  --layout-max: 90rem;
+  --header-height: 3.75rem;
+  --focus-ring: 2px solid var(--accent-strong);
+  --focus-offset: 2px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 120ms ease;
+  --transition: 200ms var(--ease-out);
+}
+
+[data-theme='dark'] {
+  --bg: #0b1020;
+  --bg-elevated: #0f1730;
+  --surface: #141c33;
+  --surface-2: #1b2442;
+  --surface-hover: #202b4d;
+  --border: #273054;
+  --border-strong: #3a4573;
+
+  --text: #e9edfb;
+  --text-muted: #a6b0d1;
+  --text-faint: #7d88ad;
+
+  --accent: #818cf8;
+  --accent-strong: #a5b4fc;
+  --accent-contrast: #0b1020;
+  --accent-soft: rgb(129 140 248 / 14%);
+
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --info: #38bdf8;
+
+  --chart-axis: #3d4877;
+  --chart-idle: #2c3559;
+  --chart-label: #eef2ff;
+  --scrim: rgb(4 7 18 / 62%);
+  --shadow-accent: 0 8px 24px rgb(129 140 248 / 22%);
+}
+
+
+[data-theme='light'] {
+  --bg: #f4f6fb;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #eef1f9;
+  --surface-hover: #e5eaf6;
+  --border: #d8def0;
+  --border-strong: #b9c2de;
+
+  --text: #101a33;
+  --text-muted: #55608a;
+  --text-faint: #7b86ad;
+
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgb(79 70 229 / 10%);
+
+  --success: #047857;
+  --warning: #b45309;
+  --danger: #be123c;
+  --info: #0369a1;
+
+  --chart-axis: #b9c2de;
+  --chart-idle: #d5dbec;
+  --chart-label: #0b1020;
+  --scrim: rgb(16 26 51 / 40%);
+  --shadow-accent: 0 8px 24px rgb(79 70 229 / 16%);
+}

@@ -1,0 +1,68 @@
+name: Deploy to GitHub Pages
+
+# Publishes the statically built lab to GitHub Pages at
+# https://nadeem-majeedch.github.io/Operating-Systems-Visual-Lab/
+#
+# Deployment is artifact-based (no `gh-pages` branch): the built `dist/` folder
+# is uploaded as a Pages artifact and published by `actions/deploy-pages`.
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+# Required by the GitHub Pages deployment flow.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; newer runs cancel older in-progress ones.
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify (typecheck, lint, tests)
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <!-- The Vite base placeholder prefixes the icon so it resolves under the
+         repository path on GitHub Pages as well as from a domain root. -->
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <title>Operating Systems Visual Lab</title>
+    <meta
+      name="description"
+      content="Operating Systems Visual Lab — interactive simulations for learning operating system concepts: scheduling, memory, synchronization, deadlocks, disks, and file systems."
+    />
+    <meta name="theme-color" content="#0b1020" />
+    <!--
+      Theme is resolved before first paint to avoid a flash of the wrong theme.
+      Must stay in sync with src/app/providers/ThemeProvider.tsx.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem('osvl.theme');
+          var prefersLight =
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+          var theme = stored === 'light' || stored === 'dark' ? stored : prefersLight ? 'light' : 'dark';
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_error) {
+          /* localStorage unavailable — fall back to the default dark theme */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      Operating Systems Visual Lab is an interactive application and requires JavaScript to run.
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

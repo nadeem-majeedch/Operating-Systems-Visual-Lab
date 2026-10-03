@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operating Systems Visual Lab</title>
+    <script>
+      // GitHub Pages serves static files only, so unknown paths fall through to
+      // this page. Recover any repo prefix plus in-app route and hand it to the
+      // app as a hash route, then replace this entry in the history.
+      (function () {
+        // Must match ROUTE_KEYWORDS in src/utils/base.ts — see tests/utils/base.test.ts.
+        var KEYWORDS = ['topics', 'labs', 'challenges', 'quizzes', 'learn', 'about'];
+        var segments = window.location.pathname
+          .split('/')
+          .filter(function (segment) {
+            return segment.length > 0;
+          });
+        var routeIndex = -1;
+        for (var i = 0; i < segments.length; i += 1) {
+          if (KEYWORDS.indexOf(segments[i]) !== -1) {
+            routeIndex = i;
+            break;
+          }
+        }
+
+        if (routeIndex === -1) return;
+
+        var prefix = routeIndex === 0 ? '' : '/' + segments.slice(0, routeIndex).join('/') + '/';
+        var path = '/' + segments.slice(routeIndex).join('/');
+        var target =
+          window.location.origin + prefix + '#' + path + window.location.search + window.location.hash;
+
+        window.location.replace(target);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>
+      Redirecting to the Operating Systems Visual Lab&hellip;
+      <a href="./">Continue</a>
+    </p>
+  </body>
+</html>

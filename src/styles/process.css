@@ -1,0 +1,378 @@
+/* ---------------------------------------------------------------------------
+   Process management lab
+   --------------------------------------------------------------------------- */
+
+/* --- State machine ------------------------------------------------------- */
+
+.state-machine,
+.context-switch {
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.state-machine__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.psm-node__box {
+  fill: var(--bg);
+  stroke: var(--border);
+  stroke-width: 1.5;
+  transition:
+    stroke var(--transition),
+    fill var(--transition);
+}
+
+.psm-node--involved .psm-node__box {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.psm-node--selected .psm-node__box {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.psm-node__label {
+  fill: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.psm-node__count {
+  fill: var(--text-faint);
+  font-size: 11px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.psm-edge__path {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.75;
+  transition:
+    stroke var(--transition),
+    stroke-width var(--transition);
+}
+
+.psm-edge--active .psm-edge__path {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.psm-edge__label rect {
+  fill: var(--surface);
+  stroke: none;
+}
+
+.psm-edge__label text {
+  fill: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.psm-edge--active .psm-edge__label text {
+  fill: var(--accent-strong);
+  font-weight: 700;
+}
+
+.psm-arrowhead {
+  fill: var(--border-strong);
+}
+
+.psm-arrowhead--active {
+  fill: var(--accent);
+}
+
+.psm-token {
+  fill: var(--accent-strong);
+  filter: drop-shadow(0 0 6px var(--accent));
+}
+
+/* --- Context switch ------------------------------------------------------ */
+
+.context-switch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.context-switch__header,
+.pcb-panel__header {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.context-switch__title,
+.pcb-panel__title {
+  color: var(--text-faint);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.context-switch__count {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.context-switch__flow {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr) 7rem minmax(0, 1fr);
+  align-items: center;
+}
+
+.context-switch__pcb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg);
+}
+
+.context-switch__pcb--out {
+  border-color: color-mix(in srgb, var(--warning) 55%, var(--border));
+}
+
+.context-switch__pcb--in {
+  border-color: color-mix(in srgb, var(--success) 55%, var(--border));
+}
+
+.context-switch__phase {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.context-switch__name {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.context-switch__pid {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.context-switch__arrow {
+  width: 100%;
+  height: auto;
+}
+
+.context-switch__arrow-path {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 2;
+}
+
+.context-switch__arrow-head {
+  fill: var(--accent);
+}
+
+.context-switch__arrow-token {
+  fill: var(--accent-strong);
+}
+
+.context-switch__note,
+.context-switch__idle {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- PCB panel ----------------------------------------------------------- */
+
+.pcb-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.pcb-panel__swatch {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: var(--radius-full);
+}
+
+.pcb-panel__empty {
+  color: var(--text-faint);
+  font-size: var(--text-sm);
+}
+
+.pcb-panel__identity {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.pcb-panel__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 700;
+}
+
+.pcb-panel__grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.pcb-panel__row {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg);
+}
+
+.pcb-panel__row dt {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pcb-panel__row dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+/* --- Process roster ------------------------------------------------------ */
+
+.process-roster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.process-roster__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.process-roster__create {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.process-roster__create-label {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.process-roster__input {
+  flex: 1 1 6rem;
+  min-width: 5rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg);
+  font-size: var(--text-sm);
+}
+
+.process-roster__table tr.is-selected {
+  background-color: var(--accent-soft);
+}
+
+.process-roster__select {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.process-roster__empty {
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* --- Action bar ---------------------------------------------------------- */
+
+.process-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.process-actions__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.process-actions__group--end {
+  margin-left: auto;
+  align-self: center;
+}
+
+.process-actions__group-label {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.process-actions__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 48rem) {
+  .context-switch__flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .process-actions__group--end {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psm-edge__path,
+  .psm-node__box {
+    transition: none;
+  }
+}

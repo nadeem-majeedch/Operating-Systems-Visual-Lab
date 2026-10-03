@@ -1,0 +1,294 @@
+/* ---------------------------------------------------------------------------
+   Schedule board (Gantt chart plus current CPU state)
+   --------------------------------------------------------------------------- */
+
+.schedule-board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.schedule-board__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.schedule-board__title {
+  font-size: var(--text-base);
+}
+
+.schedule-board__note {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.schedule-board__state {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  font-size: var(--text-sm);
+}
+
+.schedule-board__state dt {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.schedule-board__state dd {
+  margin: var(--space-1) 0 0;
+  font-weight: 600;
+}
+
+.schedule-board__state dd.is-idle,
+.schedule-board__state .is-idle {
+  color: var(--text-faint);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.schedule-board__queue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.schedule-board__queue li {
+  padding: 0.1rem var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-2);
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------------------
+   Pending algorithm note
+   --------------------------------------------------------------------------- */
+
+.algorithm-option__pending {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--border);
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+.concept-block__aside {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background-color: var(--accent-soft);
+  font-size: var(--text-sm);
+}
+
+/* ---------------------------------------------------------------------------
+   Challenges
+   --------------------------------------------------------------------------- */
+
+.challenge-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.challenge-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.challenge-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.challenge-card__index {
+  margin-bottom: var(--space-1);
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.challenge-card__title {
+  font-size: var(--text-xl);
+}
+
+.challenge-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.challenge-card__prompt {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.challenge-card__scenario {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.challenge-card__columns {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+.challenge-card__label {
+  margin-bottom: var(--space-2);
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.challenge-card__outcome {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--accent-soft);
+}
+
+.challenge-card__outcome p {
+  font-size: var(--text-sm);
+}
+
+.challenge-card__details {
+  font-size: var(--text-sm);
+}
+
+.challenge-card__details summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.challenge-card__details ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-left: var(--space-4);
+  list-style: disc;
+  color: var(--text-muted);
+}
+
+.challenge-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.challenge-card__tags,
+.challenge-card__lab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.challenge-card__lab-name {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.reference-solution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg);
+}
+
+.reference-solution__note {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.challenge-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+}
+
+.challenge-filters__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.challenge-filters__label {
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.challenge-filters__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filter-chip {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background-color: var(--bg);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.filter-chip:hover {
+  border-color: var(--border-strong);
+  background-color: var(--surface-hover);
+}
+
+.filter-chip--active {
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.challenge-count {
+  color: var(--text-faint);
+  font-size: var(--text-sm);
+}
